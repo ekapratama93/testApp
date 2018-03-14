@@ -20,6 +20,8 @@ pipeline {
           BRANCH = j[2]
         }
 
+        if (env.TAG_NAME != null) params.STAGE == 'production'
+
         sh """
           echo "job_name = ${env.JOB_NAME}"
           echo "build_number = ${env.BUILD_NUMBER}"
@@ -57,8 +59,8 @@ pipeline {
         success {
            script {
              try {
-               sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER} ."
-               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER}"
+               sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH}.${env.BUILD_NUMBER} ."
+               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}.${env.BUILD_NUMBER}"
              } catch(error) {
                echo "Docker ops fail!"
                return false
