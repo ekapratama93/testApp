@@ -19,6 +19,12 @@ pipeline {
           PROJECT = j[1]
           BRANCH = j[2]
         }
+
+        sh """
+          echo "job_name = ${env.JOB_NAME}"
+          echo "build_number = ${env.BUILD_NUMBER}"
+          echo "tag = ${env.TAG_NAME}"
+        """
       }
     }
 
