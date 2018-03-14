@@ -18,9 +18,9 @@ pipeline {
           def j = "${env.JOB_NAME}".split('/')
           PROJECT = j[1]
           BRANCH = j[2]
-        }
 
-        if (env.TAG_NAME != null) params.STAGE == 'production'
+          if (env.TAG_NAME != null) params.STAGE == 'production'
+        }
 
         sh """
           echo "job_name = ${env.JOB_NAME}"
