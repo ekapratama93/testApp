@@ -61,5 +61,34 @@ pipeline {
         }
        }
     }
+
+    stage('STAGING - deployment') {
+
+      when {
+        expression {
+          return BRANCH == 'master'
+          return params.STAGE == 'staging'
+        }
+      }
+
+      steps {
+        sh "echo 'STAGING'"
+      }
+
+    }
+
+    stage('PRODUCTION - deployment') {
+
+      when {
+        expression {
+          return params.STAGE == 'production'
+        }
+      }
+
+      steps {
+        sh "echo 'PRODUCTION'"
+      }
+
+    }
   }
 }
