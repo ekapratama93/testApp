@@ -30,7 +30,7 @@ pipeline {
 
     stage('Validation') {
       steps {
-        sh "java -jar target/test-0.0.1-SNAPSHOT.jar"
+        sh "java -jar target/test-0.0.1-SNAPSHOT.jar &"
         sleep(10)
         script {
           timeout(time: 3, unit: 'SECONDS') {
