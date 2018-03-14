@@ -74,7 +74,6 @@ pipeline {
       steps {
         sh "echo 'STAGING'"
       }
-
     }
 
     stage('PRODUCTION - deployment') {
