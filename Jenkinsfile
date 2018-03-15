@@ -57,10 +57,15 @@ pipeline {
         success {
            script {
              try {
-               sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH} ."
-               sh "docker tag asia.gcr.io/kurio-dev/test:${BRANCH} asia.gcr.io/kurio-dev/test:latest"
-               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}"
-               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:latest"
+               if ($params.STAGE == 'staging') {
+                sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER} ."  
+                sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER}"
+               } else {
+                sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH} ."
+                sh "docker tag asia.gcr.io/kurio-dev/test:${BRANCH} asia.gcr.io/kurio-dev/test:latest"
+                sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}"
+                sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:latest"
+               }
              } catch(error) {
                echo "Docker ops fail!"
                return false
