@@ -11,4 +11,8 @@ public class Application {
         return "test";
     }
 
+    @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String pong(){
+        return "pong";
+    }
 }
