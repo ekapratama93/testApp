@@ -59,7 +59,8 @@ pipeline {
              try {
                sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH} ."
                sh "docker tag asia.gcr.io/kurio-dev/test:${BRANCH} asia.gcr.io/kurio-dev/test:latest"
-               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH} asia.gcr.io/kurio-dev/test:latest"
+               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}"
+               sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:latest"
              } catch(error) {
                echo "Docker ops fail!"
                return false
