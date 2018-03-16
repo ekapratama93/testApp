@@ -15,15 +15,21 @@ pipeline {
     stage('Set variables') {
       steps {
         script {
-          def j = "${env.JOB_NAME}".split('/')
+          j = "${env.JOB_NAME}".split('/')
           PROJECT = j[1]
           BRANCH = j[2]
+          
+          if (params.STAGE == 'staging') {
+            STAGE = 'staging'
+          } else {
+            STAGE = params.STAGE
+          }
 
           if (env.TAG_NAME != null) {
-            params.STAGE = 'production'
+            STAGE = 'production'
           }
         }
-        echo params.STAGE
+        echo "stage = ${STAGE}"
         echo "job_name = ${env.JOB_NAME}"
         echo "build_number = ${env.BUILD_NUMBER}"
         echo "tag = ${env.TAG_NAME}"
@@ -59,9 +65,9 @@ pipeline {
         success {
            script {
              try {
-               if (params.STAGE == 'staging') {
-                sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER} ."  
-                sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}.${params.STAGE}.${env.BUILD_NUMBER}"
+               if (STAGE == 'staging') {
+                sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH}.${STAGE}.${env.BUILD_NUMBER} ."  
+                sh "gcloud docker -- push asia.gcr.io/kurio-dev/test:${BRANCH}.${STAGE}.${env.BUILD_NUMBER}"
                } else {
                 sh "docker build -t asia.gcr.io/kurio-dev/test:${BRANCH} ."
                 sh "docker tag asia.gcr.io/kurio-dev/test:${BRANCH} asia.gcr.io/kurio-dev/test:latest"
@@ -82,7 +88,7 @@ pipeline {
       when {
         expression {
           return BRANCH == 'master'
-          return params.STAGE == 'staging'
+          return STAGE == 'staging'
         }
       }
 
@@ -95,7 +101,7 @@ pipeline {
 
       when {
         expression {
-          return params.STAGE == 'production'
+          return STAGE == 'production'
         }
       }
 
