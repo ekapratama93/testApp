@@ -19,7 +19,7 @@ pipeline {
           PROJECT = j[1]
           BRANCH = j[2]
 
-          if (env.TAG_NAME != null) params.STAGE = 'production'
+          if (env.TAG_NAME != null) def params.STAGE = "production"
         }
 
         echo "job_name = ${env.JOB_NAME}"
